@@ -8,20 +8,22 @@
   <meta name="keywords" content="WeiZhe Lin, 畫廊, 藝術, 抽象, 畫作展示">
   <title>WeiZhe Lin Art</title>
 
-  <!-- Google Fonts -->
+  <!-- ==================== Google Fonts ==================== -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-  <!-- Tailwind CSS -->
+
+  <!-- ==================== Tailwind CSS ==================== -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Masonry JS (for layout fallback) -->
+  <!-- ==================== Masonry JS (Layout Fallback) ==================== -->
   <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js" defer></script>
-  <!-- GLightbox for lightbox modal display -->
+
+  <!-- ==================== GLightbox ==================== -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js" defer></script>
 
-  <!-- Custom Styles -->
+  <!-- ==================== Custom Styles ==================== -->
   <style>
-    /* ================= Global Reset & Base ================= */
+    /* ---------------- Global Reset & Base ---------------- */
     *, *::before, *::after {
       margin: 0;
       padding: 0;
@@ -41,15 +43,14 @@
       line-height: 1.6;
     }
     a { text-decoration: none; color: inherit; }
-    ul { list-style: none; }
     img { display: block; max-width: 100%; height: auto; }
 
-    /* ================= Header ================= */
+    /* ---------------- Header ---------------- */
     header {
       position: sticky;
       top: 0;
       width: 100%;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255,255,255,0.95);
       backdrop-filter: blur(12px);
       z-index: 100;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -64,43 +65,42 @@
     }
     .logo {
       font-family: 'Playfair Display', serif;
-      font-size: 2rem;
+      font-size: 2.25rem;
       font-weight: 400;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.15em;
+      color: #1a1a1a;
     }
     .subtitle {
       font-size: 0.875rem;
       color: #555;
       letter-spacing: 0.05em;
     }
-    /* Navigation (future use) */
-    .nav-list {
-      display: flex;
-      gap: 1rem;
-    }
-    .nav-list a:hover { color: #000; }
 
-    /* ================= Gallery Section ================= */
+    /* ---------------- Gallery Wrapper ---------------- */
     .gallery-wrapper {
       padding: 4rem 1rem;
       overflow-x: auto;
+      overflow-y: hidden;
       white-space: nowrap;
     }
-    #gallery {
-      display: inline-flex;
+    #gallery-items {
+      display: flex;
+      flex-direction: row;
       gap: 2rem;
       padding-bottom: 2rem;
     }
+
+    /* ---------------- Gallery Item ---------------- */
     .gallery-item {
-      position: relative;
       background: rgba(255,255,255,0.7);
       padding: 0.75rem;
       border-radius: 1rem;
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      cursor: pointer;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       flex: 0 0 auto;
+      cursor: pointer;
       display: inline-block;
+      vertical-align: top;
     }
     .gallery-item:hover {
       transform: translateY(-8px);
@@ -108,10 +108,10 @@
     }
     .gallery-item img {
       border-radius: 0.5rem;
-      max-height: 18rem;
-      object-fit: contain;
       background: #fff;
       padding: 0.5rem;
+      max-height: 18rem;
+      object-fit: contain;
     }
     .gallery-item figcaption {
       margin-top: 0.75rem;
@@ -122,7 +122,7 @@
       letter-spacing: 0.02em;
     }
 
-    /* ================= Modal Styles ================= */
+    /* ---------------- Modal Overlay ---------------- */
     .modal {
       position: fixed;
       top: 0;
@@ -131,57 +131,69 @@
       height: 100vh;
       background: rgba(0,0,0,0.8);
       display: none;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       z-index: 200;
       padding: 1rem;
     }
     .modal.active { display: flex; }
+
+    /* ---------------- Modal Content ---------------- */
     .modal-content {
       display: flex;
-      background: #fff;
-      border-radius: 1rem;
-      overflow: hidden;
+      width: 100%;
       max-width: 90vw;
       max-height: 90vh;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      background: transparent;
+      box-shadow: none;
+      border-radius: 1rem;
+      overflow: hidden;
     }
     .modal-img {
-      flex: 1 1 60%;
+      flex: 1 1 50%;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #f0f0f0;
+      background: transparent;
     }
-    .modal-img img { max-width: 100%; max-height: 100%; }
+    .modal-img img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
     .modal-text {
-      flex: 1 1 40%;
+      flex: 1 1 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       padding: 2rem;
-      overflow-y: auto;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     }
     .modal-text h2 {
       margin-bottom: 1rem;
       font-family: 'Playfair Display', serif;
-      font-size: 1.75rem;
-      color: #222;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.05em;
     }
     .modal-text p {
-      margin-bottom: 1rem;
       font-size: 1rem;
-      color: #444;
       line-height: 1.6;
+      color: #fff;
     }
     .modal-close {
       position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
+      top: 1.25rem;
+      right: 1.25rem;
       font-size: 2rem;
       color: #fff;
       cursor: pointer;
       z-index: 210;
     }
 
-    /* ================= Footer ================= */
+    /* ---------------- Footer ---------------- */
     footer {
       text-align: center;
       padding: 2rem 1rem;
@@ -201,30 +213,24 @@
         <div class="logo">WeiZhe Lin Art</div>
         <div class="subtitle">Abstract · Elegant · Gallery Vibes</div>
       </div>
-      <!-- Future nav placeholder -->
-      <!-- <nav class="nav-list">
-        <a href="#gallery">作品</a>
-        <a href="#about">關於我</a>
-        <a href="#contact">聯絡</a>
-      </nav> -->
     </div>
   </header>
 
   <!-- GALLERY SECTION -->
-  <section class="gallery-wrapper" id="gallery">
+  <section class="gallery-wrapper">
     <div id="gallery-items">
       <!-- 1. 溫柔有時候像一種陷阱 -->
-      <figure class="gallery-item" data-title="溫柔有時候像一種陷阱" data-description="以粉色為主的筆觸包覆螺旋狀的結構，來象徵被溫柔披上外衣的陷阱。">
+      <figure class="gallery-item" data-title="溫柔有時候像一種陷阱" data-description="以粉色為主的筆觸包覆螺旋狀的結構，象徵被溫柔披上外衣的陷阱。">
         <img src="images/gentleness_is_sometimes_like_a_trap.jpg" alt="溫柔有時候像一種陷阱">
         <figcaption>溫柔有時候像一種陷阱</figcaption>
       </figure>
       <!-- 2. 青蘋果 -->
-      <figure class="gallery-item" data-title="青蘋果" data-description="青蘋果：清甜而有點酸的初戀味道。">
+      <figure class="gallery-item" data-title="青蘋果" data-description="青蘋果：清甜而帶點微酸。">
         <img src="images/green_apple.jpg" alt="青蘋果">
         <figcaption>青蘋果</figcaption>
       </figure>
       <!-- 3. 我從裂縫中長出來 -->
-      <figure class="gallery-item" data-title="我從裂縫中長出來" data-description="以富有生命力的雙股螺旋狀結構樣式，從兩側的裂縫中生長出來並交織在一起。">
+      <figure class="gallery-item" data-title="我從裂縫中長出來" data-description="以富有生命力的雙股螺旋狀結構樣式，從兩側的裂縫中生長出來並交織在一起，象徵生命的韌性。">
         <img src="images/i_grew_out_of_the_cracks.jpg" alt="我從裂縫中長出來">
         <figcaption>我從裂縫中長出來</figcaption>
       </figure>
@@ -239,7 +245,7 @@
         <figcaption>星空下的孤寂</figcaption>
       </figure>
       <!-- 6. 靈魂的背後是什麼樣子 -->
-      <figure class="gallery-item" data-title="靈魂的背後是什麼樣子" data-description="模糊的背後流淌著像是鏡子的水面，同時乘載且倒映著支撐靈魂重量的寶石碎片。">
+      <figure class="gallery-item" data-title="靈魂的背後是什麼樣子" data-description="模糊的背後流淌著如鏡之水面，同時乘載且倒映著支撐靈魂重量的寶石碎片。">
         <img src="images/what_does_the_backside_of_the_soul_look_like.jpg" alt="靈魂的背後是什麼樣子">
         <figcaption>靈魂的背後是什麼樣子</figcaption>
       </figure>
@@ -250,32 +256,29 @@
   <div class="modal" id="modal">
     <div class="modal-close" id="modal-close">&times;</div>
     <div class="modal-content">
-      <div class="modal-img"><img src="" alt="Modal Image"></div>
+      <div class="modal-img"><img src="" alt=""></div>
       <div class="modal-text">
-        <h2 id="modal-title">作品標題</h2>
-        <p id="modal-description">在此輸入作品的介紹與創作理念。</p>
+        <h2 id="modal-title"></h2>
+        <p id="modal-description"></p>
       </div>
     </div>
   </div>
 
-  <!-- SCRIPTS: Masonry Fallback & Lightbox & Modal Logic -->
+  <!-- SCRIPTS: Lightbox, Modal Logic, Masonry Fallback -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Masonry fallback for grid alignment
+      // Masonry fallback (optional) ...
       try {
         new Masonry('#gallery-items', {
           itemSelector: '.gallery-item',
           columnWidth: '.gallery-item',
           percentPosition: true
         });
-      } catch (e) {
-        console.warn('Masonry load failed, using inline-flex fallback');
-      }
-      // GLightbox (optional) can be configured here if needed
-      GLightbox && GLightbox({ selector: '.gallery-item a', openEffect: 'zoom' });
+      } catch (e) {}
 
-      // Modal click logic
+      // Modal logic
       const modal = document.getElementById('modal');
+      const closeBtn = document.getElementById('modal-close');
       document.querySelectorAll('.gallery-item').forEach(item => {
         item.addEventListener('click', () => {
           document.querySelector('.modal-img img').src = item.querySelector('img').src;
@@ -284,13 +287,11 @@
           modal.classList.add('active');
         });
       });
-      document.getElementById('modal-close').addEventListener('click', () => {
-        modal.classList.remove('active');
-      });
+      closeBtn.addEventListener('click', () => modal.classList.remove('active'));
     });
   </script>
 
-  <!-- FOOTER (optional) -->
+  <!-- FOOTER -->
   <footer>
     <p>&copy; 2025 WeiZhe Lin. All rights reserved.</p>
   </footer>
