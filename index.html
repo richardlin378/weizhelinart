@@ -5,113 +5,133 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WeiZhe Lin Art</title>
+
+  <!-- Google Fonts for elegant headers -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Masonry.js -->
+  <!-- Masonry.js for layout -->
   <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js" defer></script>
-  <!-- GLightbox -->
+  <!-- GLightbox for lightbox effect -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js" defer></script>
 
   <style>
-    /* 全域重置 */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; }
+    /* ============================ */
+    /* Global Reset and Base Styles */
+    /* ============================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       background: url('images/background_gallery.png') no-repeat center center fixed;
       background-size: cover;
+      color: #2d2d2d;
       position: relative;
-      color: #333;
       overflow-x: hidden;
+      /* No global overlay */
     }
-    /* 半透明遮罩提升對比 */
-    body::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(255,255,255,0.8);
-      pointer-events: none;
-      z-index: 0;
-    }
-    /* Header 區域 */
+
+    /* ============================ */
+    /* Header Styles */
+    /* ============================ */
     header {
-      position: relative;
-      z-index: 10;
-      text-align: center;
+      font-family: 'Playfair Display', serif;
+      background: rgba(255,255,255,0.95);
       padding: 2rem 1rem;
-      background: rgba(255,255,255,0.9);
+      text-align: center;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 50;
     }
     header h1 {
-      font-size: 3rem;
-      font-weight: 200;
-      letter-spacing: .2em;
+      font-size: 3.5rem;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      color: #1a1a1a;
       margin-bottom: 0.5rem;
     }
     header p {
-      font-size: 1.25rem;
+      font-size: 1.125rem;
       color: #555;
+      letter-spacing: 0.05em;
     }
-    /* 主內容容器 */
+
+    /* ============================ */
+    /* Main Gallery Container */
+    /* ============================ */
     main {
+      max-width: 72rem;
+      margin: 3rem auto;
+      padding: 0 1rem;
       position: relative;
       z-index: 10;
-      max-width: 72rem;
-      margin: 2rem auto;
-      padding: 1rem;
     }
-    /* 圖庫 Masonry 布局 */
+
+    /* Masonry Layout via CSS Columns */
     #gallery {
-      column-count: 1;
       column-gap: 1rem;
     }
-    @media (min-width: 640px) {
-      #gallery { column-count: 2; }
-    }
-    @media (min-width: 1024px) {
-      #gallery { column-count: 3; }
-    }
+    @media (min-width: 640px) { #gallery { column-count: 2; } }
+    @media (min-width: 1024px) { #gallery { column-count: 3; } }
+
+    /* ============================ */
+    /* Gallery Item Styles */
+    /* ============================ */
     .gallery-item {
       display: inline-block;
-      width: 100%;
-      margin-bottom: 1rem;
+      width: 100%;  /* Fill column */
+      margin-bottom: 1.5rem;
       break-inside: avoid;
       position: relative;
-      transform-style: preserve-3d;
+      /* Floating animation */
       animation: float 6s ease-in-out infinite;
     }
-    /* 漂浮動畫 */
     @keyframes float {
-      0%, 100%   { transform: translateY(0px) translateZ(0px); }
-      50%        { transform: translateY(-10px) translateZ(5px); }
+      0%,100% { transform: translateY(0) translateZ(0); }
+      50%    { transform: translateY(-8px) translateZ(5px); }
     }
+
     .gallery-item a {
       display: block;
-      perspective: 1000px;
+      perspective: 800px;
     }
     .gallery-item img {
       width: 100%;
-      height: auto;
-      max-height: 20rem;
+      max-height: 18rem;
       object-fit: contain;
-      border-radius: 0.5rem;
+      border-radius: 0.75rem;
+      background: rgba(255,255,255,0.6);
+      padding: 0.5rem;
       box-shadow: 0 10px 20px rgba(0,0,0,0.15);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       backface-visibility: hidden;
     }
     .gallery-item img:hover {
-      transform: translateZ(20px) scale(1.03);
-      box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+      transform: translateZ(15px) scale(1.05);
+      box-shadow: 0 20px 30px rgba(0,0,0,0.25);
     }
+
     figcaption {
-      text-align: center;
       margin-top: 0.75rem;
+      text-align: center;
       font-size: 1rem;
-      font-weight: 500;
-      color: #444;
+      font-weight: 600;
+      color: #333;
+      letter-spacing: 0.02em;
     }
-    /* Footer */
+
+    /* ============================ */
+    /* Footer Styles */
+    /* ============================ */
     footer {
       text-align: center;
       padding: 2rem 1rem;
@@ -120,57 +140,79 @@
       position: relative;
       z-index: 10;
     }
+
   </style>
 </head>
 
 <body>
-  <!-- Header -->
+  <!-- HEADER -->
   <header>
     <h1>WeiZhe Lin Art</h1>
     <p>Abstract · Elegant · Gallery Vibes</p>
   </header>
 
-  <!-- 主內容 -->
+  <!-- MAIN CONTENT -->
   <main>
     <div id="gallery">
-      <!-- 溫柔有時候像一種陷阱 -->
+      <!-- 1. 溫柔有時候像一種陷阱 -->
       <figure class="gallery-item">
         <a href="images/gentleness_is_sometimes_like_a_trap.jpg" class="glightbox">
           <img src="images/gentleness_is_sometimes_like_a_trap.jpg" alt="溫柔有時候像一種陷阱" />
         </a>
         <figcaption>溫柔有時候像一種陷阱</figcaption>
       </figure>
-      <!-- 青蘋果 -->
+      <!-- 2. 青蘋果 -->
       <figure class="gallery-item">
         <a href="images/green_apple.jpg" class="glightbox">
           <img src="images/green_apple.jpg" alt="青蘋果" />
         </a>
         <figcaption>青蘋果</figcaption>
       </figure>
-      <!-- 複製以上 block 以新增更多作品項目 -->
+      <!-- 3. 我從裂縫中長出來 -->
+      <figure class="gallery-item">
+        <a href="images/i_grew_out_of_the_cracks.jpg" class="glightbox">
+          <img src="images/i_grew_out_of_the_cracks.jpg" alt="我從裂縫中長出來" />
+        </a>
+        <figcaption>我從裂縫中長出來</figcaption>
+      </figure>
+      <!-- 4. 我把未說出的話都種進身體裡了 -->
+      <figure class="gallery-item">
+        <a href="images/i_have_planted_all_unspoken_words_into_my_body.jpg" class="glightbox">
+          <img src="images/i_have_planted_all_unspoken_words_into_my_body.jpg" alt="我把未說出的話都種進身體裡了" />
+        </a>
+        <figcaption>我把未說出的話都種進身體裡了</figcaption>
+      </figure>
+      <!-- 5. 星空下的孤寂 -->
+      <figure class="gallery-item">
+        <a href="images/lonely_grassland_night.jpg" class="glightbox">
+          <img src="images/lonely_grassland_night.jpg" alt="星空下的孤寂" />
+        </a>
+        <figcaption>星空下的孤寂</figcaption>
+      </figure>
+      <!-- 6. 靈魂的背後是什麼樣子 -->
+      <figure class="gallery-item">
+        <a href="images/what_does_the_backside_of_the_soul_look_like.jpg" class="glightbox">
+          <img src="images/what_does_the_backside_of_the_soul_look_like.jpg" alt="靈魂的背後是什麼樣子" />
+        </a>
+        <figcaption>靈魂的背後是什麼樣子</figcaption>
+      </figure>
     </div>
   </main>
 
-  <!-- Footer -->
+  <!-- FOOTER -->
   <footer>
     &copy; 2025 WeiZhe Lin. All rights reserved.
   </footer>
 
-  <!-- 初始化 Masonry & GLightbox -->
+  <!-- INITIALIZE Masonry & GLightbox -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Masonry
       new Masonry('#gallery', {
         itemSelector: '.gallery-item',
         columnWidth: '.gallery-item',
         percentPosition: true
       });
-      // Lightbox
-      GLightbox({
-        selector: '.glightbox',
-        openEffect: 'zoom',
-        closeEffect: 'fade'
-      });
+      GLightbox({ selector: '.glightbox', openEffect: 'zoom', closeEffect: 'fade' });
     });
   </script>
 </body>
