@@ -16,22 +16,12 @@
     /* Reset & Base */
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
     html, body { width:100%; height:100%; }
-    body { font-family:'Inter',sans-serif; background:url('images/background_gallery.png') no-repeat center center fixed; background-size:cover; color:#2d2d2d; overflow-x:hidden; position:relative; padding-bottom:4rem; transition:background 0.3s, color 0.3s; }
+    body { font-family:'Inter',sans-serif; background:url('images/background_gallery.png') no-repeat center center fixed; background-size:cover; color:#2d2d2d; overflow-x:hidden; position:relative; padding-bottom:4rem; }
     a { text-decoration:none; color:inherit; }
     img { display:block; max-width:100%; height:auto; }
 
-    /* Dark Mode */
-    body.dark-mode { background:#111; color:#eee; }
-    body.dark-mode header { background:rgba(20,20,20,0.95); }
-    body.dark-mode .subtitle { color:#ccc; }
-    body.dark-mode #about-btn, body.dark-mode #theme-btn { border-color:#eee; color:#eee; }
-    body.dark-mode #bio-modal { background:#222; color:#eee; }
-    body.dark-mode .gallery-item { background:rgba(30,30,30,0.7); }
-    body.dark-mode .modal-text { color:#eee; }
-    body.dark-mode footer { background:rgba(20,20,20,0.95); color:#ccc; }
-
     /* Header */
-    header { position:sticky; top:0; width:100%; background:rgba(255,255,255,0.95); backdrop-filter:blur(12px); z-index:100; box-shadow:0 2px 10px rgba(0,0,0,0.1); transition:background 0.3s; }
+    header { position:sticky; top:0; width:100%; background:rgba(255,255,255,0.95); backdrop-filter:blur(12px); z-index:100; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
     .header-inner { max-width:72rem; margin:auto; padding:1.5rem 1rem; display:flex; align-items:center; justify-content:space-between; }
     .logo { font-family:'Playfair Display',serif; font-size:2.25rem; letter-spacing:0.15em; color:#1a1a1a; }
     .subtitle { font-size:0.875rem; color:#555; letter-spacing:0.05em; }
@@ -48,6 +38,8 @@
     /* Gallery Container */
     .gallery-wrapper { position:relative; height:calc(100vh - 7rem - 3rem); overflow:hidden; display:flex; align-items:center; }
     #gallery-items { display:flex; gap:4rem; overflow-x:auto; scroll-snap-type:x mandatory; padding:0 1rem; scroll-behavior:smooth; }
+    #gallery-items::-webkit-scrollbar { display:none; }
+    #gallery-items { scrollbar-width:none; -ms-overflow-style:none; }
 
     /* Light & Shadow Overlay */
     .gallery-wrapper::before { content:''; position:absolute; top:0; left:0; width:200%; height:200%; pointer-events:none; background:radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 30%); transition:background-position 0.1s; }
@@ -78,7 +70,7 @@
     .modal-close { position:absolute; top:1.25rem; right:1.25rem; font-size:2rem; color:#fff; cursor:pointer; z-index:210; }
 
     /* Footer */
-    footer { position:absolute; bottom:0; left:0; width:100%; text-align:center; padding:1rem; background:rgba(255,255,255,0.95); backdrop-filter:blur(5px); font-size:0.875rem; color:#666; transition:background 0.3s; }
+    footer { position:absolute; bottom:0; left:0; width:100%; text-align:center; padding:1rem; background:rgba(255,255,255,0.95); backdrop-filter:blur(5px); font-size:0.875rem; color:#666; }
   </style>
 </head>
 <body>
@@ -90,7 +82,6 @@
       </div>
       <div>
         <button id="about-btn">作者簡介</button>
-        <button id="theme-btn">🌙</button>
       </div>
     </div>
   </header>
@@ -160,63 +151,48 @@
     <div class="modal-close" id="modal-close">&times;</div>
     <div class="modal-content">
       <div class="modal-img"><img src="" alt="作品預覽"></div>
-      <div class="modal-text">
-        <h2 id="modal-title"></h2>
-        <p id="modal-description"></p>
-      </div>
+      <div class="modal-text"><h2 id="modal-title"></h2><p id="modal-description"></p></div>
     </div>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // About modal
+      // Bio modal
       const bioBtn = document.getElementById('about-btn'), bioModal = document.getElementById('bio-modal'), bioClose = document.getElementById('bio-close');
       bioBtn.addEventListener('click', () => bioModal.classList.toggle('active'));
       bioClose.addEventListener('click', () => bioModal.classList.remove('active'));
 
-      // Theme switch
-      const themeBtn = document.getElementById('theme-btn');
-      themeBtn.addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        themeBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-      });
-
-      // Light effect sync exactly
+      // Light effect
       const wrapper = document.querySelector('.gallery-wrapper');
       wrapper.addEventListener('mousemove', e => {
         const rect = wrapper.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        wrapper.style.setProperty('--mx', x + 'px');
-        wrapper.style.setProperty('--my', y + 'px');
+        wrapper.style.setProperty('--mx', (e.clientX - rect.left) + 'px');
+        wrapper.style.setProperty('--my', (e.clientY - rect.top) + 'px');
       });
 
       // Entrance animation
       const items = document.querySelectorAll('.gallery-item');
-      const observer = new IntersectionObserver(entries => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold:0.3 });
+      const observer = new IntersectionObserver(entries => { entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold:0.3 });
       items.forEach(item => observer.observe(item));
 
       // Mirror scrollbar sync
       const slider = document.getElementById('gallery-items'), mirror = document.getElementById('scrollbar'), cont = document.getElementById('scrollbar-container');
-      const syncScroll = () => { mirror.style.width = slider.scrollWidth + 'px'; };
-      syncScroll(); window.addEventListener('resize', syncScroll);
-      slider.addEventListener('scroll', () => cont.scrollLeft = slider.scrollLeft);
-      cont.addEventListener('scroll', () => slider.scrollLeft = cont.scrollLeft);
+      const syncScroll = ()=> mirror.style.width = slider.scrollWidth + 'px'; syncScroll(); window.addEventListener('resize', syncScroll);
+      slider.addEventListener('scroll', ()=> cont.scrollLeft = slider.scrollLeft);
+      cont.addEventListener('scroll', ()=> slider.scrollLeft = cont.scrollLeft);
 
       // Lightbox click
       const modal = document.getElementById('modal'), closeBtn = document.getElementById('modal-close');
-      items.forEach(item => item.addEventListener('click', () => {
+      items.forEach(item => item.addEventListener('click', ()=>{
         document.querySelector('.modal-img img').src = item.querySelector('img').src;
         document.getElementById('modal-title').textContent = item.dataset.title;
         document.getElementById('modal-description').textContent = item.dataset.description;
         modal.classList.add('active');
       }));
-      closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+      closeBtn.addEventListener('click', ()=> modal.classList.remove('active'));
     });
   </script>
 
-  <footer>
-    <p>&copy; 2025 WeiZhe Lin. All rights reserved.</p>
-  </footer>
+  <footer><p>&copy; 2025 WeiZhe Lin. All rights reserved.</p></footer>
 </body>
 </html>
