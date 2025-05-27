@@ -15,8 +15,8 @@
   <style>
     /* Reset & Base */
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-    html, body { width:100%; height:100%; }
-    body { font-family:'Inter',sans-serif; background:url('images/background_gallery.png') no-repeat center center fixed; background-size:cover; color:#2d2d2d; overflow-x:hidden; position:relative; padding-bottom:4rem; }
+    html, body { width:100%; height:100%; overflow:hidden; }
+    body { font-family:'Inter',sans-serif; background:url('images/background_gallery.png') no-repeat center center fixed; background-size:cover; color:#2d2d2d; position:relative; padding:0; }
     a { text-decoration:none; color:inherit; }
     img { display:block; max-width:100%; height:auto; }
 
@@ -36,7 +36,7 @@
     #bio-close { position:absolute; top:0.75rem; right:1rem; font-size:1.5rem; cursor:pointer; }
 
     /* Gallery Container */
-    .gallery-wrapper { position:relative; height:calc(100vh - 7rem - 3rem); display:flex; align-items:center; padding-top:1rem; }
+    .gallery-wrapper { position:relative; display:flex; align-items:center; justify-content:center; padding:2rem 0; }
     #gallery-items { display:flex; gap:4rem; overflow-x:auto; scroll-snap-type:x mandatory; padding:0 1rem; scroll-behavior:smooth; }
     /* Simple visible scrollbar */
     #gallery-items::-webkit-scrollbar { height:12px; }
@@ -47,7 +47,7 @@
     .gallery-wrapper::before { content:''; position:absolute; top:0; left:0; width:200%; height:200%; pointer-events:none; background:radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 30%); transition:background-position 0.1s; }
 
     /* Gallery Item */
-    .gallery-item { flex:0 0 auto; background:rgba(255,255,255,0.7); padding:0.75rem; border-radius:1rem; box-shadow:0 5px 15px rgba(0,0,0,0.1); transition:transform 0.3s,box-shadow 0.3s,opacity 0.6s; scroll-snap-align:center; text-align:center; opacity:0; transform:translateY(20px); }
+    .gallery-item { flex:0 0 auto; background:rgba(255,255,255,0.7); padding:0.75rem; border-radius:1rem; box-shadow:0 5px 15px rgba(0,0,0,0.1); transition:transform 0.3s,box-shadow 0.3s,opacity 0.6s; scroll-snap-align:center; text-align:center; opacity:0; transform:translateY(20px); cursor:pointer; }
     .gallery-item.visible { opacity:1; transform:translateY(0); }
     .gallery-item:hover { transform:translateY(-8px); box-shadow:0 15px 25px rgba(0,0,0,0.2); }
     .gallery-item img { border-radius:0.5rem; background:#fff; padding:0.5rem; max-height:18rem; object-fit:contain; }
@@ -92,10 +92,12 @@
   <!-- Gallery -->
   <section class="gallery-wrapper" id="gallery-wrapper">
     <div id="gallery-items">
+      <!-- 作品清單 -->
       <figure class="gallery-item" data-title="溫柔有時候像一種陷阱" data-description="以粉色為主的筆觸包覆螺旋狀的結構，象徵披上溫柔外衣的陷阱。">
         <img src="images/gentleness_is_sometimes_like_a_trap.jpg" alt="溫柔有時候像一種陷阱">
         <figcaption>溫柔有時候像一種陷阱</figcaption>
       </figure>
+      <!-- 更多作品... 保留11件 -->
       <figure class="gallery-item" data-title="青蘋果" data-description="青蘋果：清甜而帶點微酸。">
         <img src="images/green_apple.jpg" alt="青蘋果">
         <figcaption>青蘋果</figcaption>
@@ -144,7 +146,7 @@
     <div class="modal-close" id="modal-close">&times;</div>
     <div class="modal-content">
       <div class="modal-img"><img src="" alt="作品預覽"></div>
-        <div class="modal-text"><h2 id="modal-title"></h2><p id="modal-description"></p></div>
+      <div class="modal-text"><h2 id="modal-title"></h2><p id="modal-description"></p></div>
     </div>
   </div>
 
@@ -167,8 +169,6 @@
       const items = document.querySelectorAll('.gallery-item');
       const observer = new IntersectionObserver(entries => { entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold:0.3 });
       items.forEach(item => observer.observe(item));
-
-      // Mirror scrollbar sync removed (using simple scrollbar)
 
       // Lightbox click
       const modal = document.getElementById('modal'), closeBtn = document.getElementById('modal-close');
