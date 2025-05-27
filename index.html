@@ -17,7 +17,7 @@
   <style>
     /* Reset & Base */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; scroll-behavior: smooth; }
+    html, body { width: 100%; height: 100%; }
     body {
       font-family: 'Inter', sans-serif;
       background: url('images/background_gallery.png') no-repeat center center fixed;
@@ -44,25 +44,27 @@
       font-family: 'Playfair Display', serif;
       font-size: 2.25rem; letter-spacing: 0.15em; color: #1a1a1a;
     }
-    .subtitle {
-      font-size: 0.875rem; color: #555; letter-spacing: 0.05em;
-    }
+    .subtitle { font-size: 0.875rem; color: #555; letter-spacing: 0.05em; }
 
-    /* Gallery Wrapper */
+    /* Gallery Container Centered */
     .gallery-wrapper {
-      margin: 2rem 0;
-      overflow: hidden; /* hide scrollbar here */
-      cursor: grab; position: relative;
+      position: relative;
+      height: calc(100vh - 7rem - 3rem); /* header ~7rem, footer ~3rem */
+      overflow: hidden;
+      display: flex; align-items: center;
+      cursor: grab;
     }
     .gallery-wrapper:active { cursor: grabbing; }
+
+    /* Gallery Items - hide native scrollbar */
     #gallery-items {
-      display: flex; gap: 4rem; padding: 1rem;
-      overflow-x: scroll;
+      display: flex; gap: 4rem;
+      overflow-x: hidden;
       scroll-snap-type: x mandatory;
-      scrollbar-width: thin; /* Firefox */
+      padding: 0 1rem;
     }
-    #gallery-items::-webkit-scrollbar { height: 12px; }
-    #gallery-items::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.3); border-radius: 6px; }
+    #gallery-items::-webkit-scrollbar { display: none; }
+    #gallery-items { scrollbar-width: none; }
 
     .gallery-item {
       flex: 0 0 auto;
@@ -86,24 +88,18 @@
       font-weight: 600; color: #333;
     }
 
-    /* Mirror Scrollbar */
+    /* Bottom Mirror Scrollbar */
     #scrollbar-container {
-      position: absolute; bottom: 4rem; left: 0; width: 100%;
-      overflow-x: auto; overflow-y: hidden;
-      height: 12px;
+      position: absolute; bottom: 3rem; left: 0; width: 100%;
+      overflow-x: auto; overflow-y: hidden; height: 12px;
     }
     #scrollbar-container::-webkit-scrollbar { height: 12px; }
     #scrollbar-container::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.3); border-radius: 6px; }
-    #scrollbar {
-      height: 1px; background: transparent;
-    }
+    #scrollbar { height: 1px; background: transparent; }
 
     /* Modal */
-    .modal {
-      position: fixed; top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.8);
-      display: none; justify-content: center; align-items: center;
+    .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center;
       z-index: 200; padding: 1rem;
     }
     .modal.active { display: flex; }
@@ -119,22 +115,12 @@
       padding: 2rem; color: #fff;
       text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     }
-    .modal-text h2 {
-      margin-bottom: 1rem;
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem; font-weight: 700;
-    }
+    .modal-text h2 { margin-bottom: 1rem; font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; }
     .modal-text p { font-size: 1rem; line-height: 1.6; }
-    .modal-close {
-      position: absolute; top: 1.25rem; right: 1.25rem;
-      font-size: 2rem; color: #fff; cursor: pointer;
-      z-index: 210;
-    }
+    .modal-close { position: absolute; top: 1.25rem; right: 1.25rem; font-size: 2rem; color: #fff; cursor: pointer; z-index: 210; }
 
     /* Footer */
-    footer {
-      position: absolute; bottom: 0; left: 0;
-      width: 100%; text-align: center; padding: 1rem;
+    footer { position: absolute; bottom: 0; left: 0; width: 100%; text-align: center; padding: 1rem;
       background: rgba(255,255,255,0.95); backdrop-filter: blur(5px);
       font-size: 0.875rem; color: #666;
     }
@@ -145,67 +131,31 @@
   <!-- Header -->
   <header>
     <div class="header-inner">
-      <div>
-        <div class="logo">WeiZhe Lin Art</div>
-        <div class="subtitle">Beautiful body perishes, but a work of art dies not.</div>
-      </div>
+      <div><div class="logo">WeiZhe Lin Art</div>
+      <div class="subtitle">Beautiful body perishes, but a work of art dies not.</div></div>
     </div>
   </header>
 
-  <!-- Gallery -->
+  <!-- Gallery Centered -->
   <section class="gallery-wrapper">
     <div id="gallery-items">
       <!-- Original 6 -->
-      <figure class="gallery-item" data-title="溫柔有時候像一種陷阱" data-description="以粉色為主的筆觸包覆螺旋狀的結構...">
-        <img src="images/gentleness_is_sometimes_like_a_trap.jpg" alt="溫柔有時候像一種陷阱">
-        <figcaption>溫柔有時候像一種陷阱</figcaption>
-      </figure>
-      <figure class="gallery-item" data-title="青蘋果" data-description="青蘋果：清甜而帶點微酸的初戀滋味。">
-        <img src="images/green_apple.jpg" alt="青蘋果">
-        <figcaption>青蘋果</figcaption>
-      </figure>
-      <figure class="gallery-item" data-title="我從裂縫中長出來" data-description="雙股螺旋狀結構從裂縫中生長...">
-        <img src="images/i_grew_out_of_the_cracks.jpg" alt="我從裂縫中長出來">
-        <figcaption>我從裂縫中長出來</figcaption>
-      </figure>
-      <figure class="gallery-item" data-title="我把未說出的話都種進身體裡了" data-description="以細胞與血管呈現未說之話...">
-        <img src="images/i_have_planted_all_unspoken_words_into_my_body.jpg" alt="我把未說出的話都種進身體裡了">
-        <figcaption>我把未說出的話都種進身體裡了</figcaption>
-      </figure>
-      <figure class="gallery-item" data-title="星空下的孤寂" data-description="握住粉黑星空的輪廓...">
-        <img src="images/lonely_grassland_night.jpg" alt="星空下的孤寂">
-        <figcaption>星空下的孤寂</figcaption>
-      </figure>
-      <figure class="gallery-item" data-title="靈魂的背後是什麼樣子" data-description="如鏡之水面倒映碎片...">
-        <img src="images/what_does_the_backside_of_the_soul_look_like.jpg" alt="靈魂的背後是什麼樣子">
-        <figcaption>靈魂的背後是什麼樣子</figcaption>
-      </figure>
-
+      <figure class="gallery-item" data-title="溫柔有時候像一種陷阱" data-description="以粉色為主的筆觸包覆螺旋狀..."> <img src="images/gentleness_is_sometimes_like_a_trap.jpg" alt="溫柔..."> <figcaption>溫柔有時候像一種陷阱</figcaption> </figure>
+      <figure class="gallery-item" data-title="青蘋果" data-description="青蘋果：清甜而帶點微酸的初戀滋味。"> <img src="images/green_apple.jpg" alt="青蘋果"> <figcaption>青蘋果</figcaption> </figure>
+      <figure class="gallery-item" data-title="我從裂縫中長出來" data-description="雙股螺旋狀結構從裂縫中生長..."> <img src="images/i_grew_out_of_the_cracks.jpg" alt="我從裂縫中長出來"> <figcaption>我從裂縫中長出來</figcaption> </figure>
+      <figure class="gallery-item" data-title="我把未說出的話都種進身體裡了" data-description="以細胞與血管呈現..."> <img src="images/i_have_planted_all_unspoken_words_into_my_body.jpg" alt="..."> <figcaption>我把未說出的話都種進身體裡了</figcaption> </figure>
+      <figure class="gallery-item" data-title="星空下的孤寂" data-description="握住粉黑星空的輪廓..."> <img src="images/lonely_grassland_night.jpg" alt="星空下的孤寂"> <figcaption>星空下的孤寂</figcaption> </figure>
+      <figure class="gallery-item" data-title="靈魂的背後是什麼樣子" data-description="如鏡之水面倒映..."> <img src="images/what_does_the_backside_of_the_soul_look_like.jpg" alt="靈魂的背後?"> <figcaption>靈魂的背後是什麼樣子</figcaption> </figure>
       <!-- Added 5 new -->
-      <figure class="gallery-item" data-title="彼岸燈火" data-description="彼岸燈火，如夢似幻。">
-        <img src="images/lights_on_the_other_shore.jpg" alt="彼岸燈火">
-        <figcaption>彼岸燈火</figcaption>
-      </figure>
-      <figure class="gallery-item" data-title="日蝕寶寶" data-description="可愛的日蝕寶寶。">
-        <img src="images/eclipse_baby.jpg" alt="日蝕寶寶">
-        <figcaption>日蝕寶寶</figcaption>
-      </figure>
-      <figure class="gallery-item" data-title="黃色的機率" data-description="黃色的機率=?">
-        <img src="images/the_probability_of_yellow.jpg" alt="黃色的機率">
-        <figcaption>黃色的機率</figcaption>
-      </figure>
-      <figure class="gallery-item" data-title="光長出的羽毛" data-description="具象化的表現由光生長出的羽毛...">
-        <img src="images/feathers_grown_from_light.jpg" alt="光長出的羽毛">
-        <figcaption>光長出的羽毛</figcaption>
-      </figure>
-      <figure class="gallery-item" data-title="靈跡" data-description="一艘大船引領著眾多小船航行浪漫的海面上。">
-        <img src="images/traces_of_the_soul.jpg" alt="靈跡">
-        <figcaption>靈跡</figcaption>
-      </figure>
+      <figure class="gallery-item" data-title="彼岸燈火" data-description="彼岸燈火，如夢似幻。"> <img src="images/lights_on_the_other_shore.jpg" alt="彼岸燈火"> <figcaption>彼岸燈火</figcaption> </figure>
+      <figure class="gallery-item" data-title="日蝕寶寶" data-description="可愛的日蝕寶寶。"> <img src="images/eclipse_baby.jpg" alt="日蝕寶寶"> <figcaption>日蝕寶寶</figcaption> </figure>
+      <figure class="gallery-item" data-title="黃色的機率" data-description="黃色的機率=?"> <img src="images/the_probability_of_yellow.jpg" alt="黃色的機率"> <figcaption>黃色的機率</figcaption> </figure>
+      <figure class="gallery-item" data-title="光長出的羽毛" data-description="具象化的表現由光生長出的羽毛..."> <img src="images/feathers_grown_from_light.jpg" alt="光長出的羽毛"> <figcaption>光長出的羽毛</figcaption> </figure>
+      <figure class="gallery-item" data-title="靈跡" data-description="一艘大船引領著眾多小船航行浪漫的海面上。"> <img src="images/traces_of_the_soul.jpg" alt="靈跡"> <figcaption>靈跡</figcaption> </figure>
     </div>
   </section>
 
-  <!-- Mirror Scrollbar -->
+  <!-- Bottom Mirror Scrollbar -->
   <div id="scrollbar-container">
     <div id="scrollbar"></div>
   </div>
@@ -226,49 +176,29 @@
     document.addEventListener('DOMContentLoaded', function() {
       const slider = document.getElementById('gallery-items');
       const mirror = document.getElementById('scrollbar');
-      // set mirror width
-      function syncMirror() {
-        mirror.style.width = slider.scrollWidth + 'px';
-      }
-      syncMirror(); window.addEventListener('resize', syncMirror);
-      // mirror scroll container
+      // sync mirror width & scroll
+      function sync() { mirror.style.width = slider.scrollWidth + 'px'; }
+      sync(); window.addEventListener('resize', sync);
       const cont = document.getElementById('scrollbar-container');
       cont.scrollLeft = slider.scrollLeft;
-      slider.addEventListener('scroll', () => { cont.scrollLeft = slider.scrollLeft; });
-      cont.addEventListener('scroll', () => { slider.scrollLeft = cont.scrollLeft; });
-
-      // drag & wheel
-      let isDown = false, startX, scrollLeft;
-      slider.addEventListener('pointerdown', e => {
-        isDown = true; startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft;
-      });
-      document.addEventListener('pointerup', () => isDown = false);
-      document.addEventListener('pointermove', e => {
-        if (!isDown) return; e.preventDefault();
-        const x = e.pageX - slider.offsetLeft;
-        slider.scrollLeft = scrollLeft - (x - startX) * 2;
-      });
+      slider.addEventListener('scroll', () => cont.scrollLeft = slider.scrollLeft);
+      cont.addEventListener('scroll', () => slider.scrollLeft = cont.scrollLeft);
+      // drag
+      let down=false, startX, left;
+      slider.addEventListener('pointerdown', e => { down=true; startX=e.pageX-slider.offsetLeft; left=slider.scrollLeft; });
+      document.addEventListener('pointerup', () => down=false);
+      document.addEventListener('pointermove', e => { if(!down) return; e.preventDefault(); const x=e.pageX-slider.offsetLeft; slider.scrollLeft = left - (x-startX)*2; });
       slider.addEventListener('wheel', e => { e.preventDefault(); slider.scrollLeft += e.deltaY; });
-
       // auto-scroll on edge
-      slider.addEventListener('mousemove', e => {
-        const rect = slider.getBoundingClientRect();
-        const xRel = (e.clientX - rect.left) / rect.width;
-        if (xRel > 0.85) slider.scrollLeft += 4;
-        else if (xRel < 0.15) slider.scrollLeft -= 4;
-      });
-
+      slider.addEventListener('mousemove', e => { const r=slider.getBoundingClientRect(); const xr=(e.clientX-r.left)/r.width; if(xr>0.85) slider.scrollLeft+=4; else if(xr<0.15) slider.scrollLeft-=4; });
       // modal
-      const modal = document.getElementById('modal');
-      const closeBtn = document.getElementById('modal-close');
-      document.querySelectorAll('.gallery-item').forEach(item => {
-        item.addEventListener('click', () => {
-          document.querySelector('.modal-img img').src = item.querySelector('img').src;
-          document.getElementById('modal-title').textContent = item.dataset.title;
-          document.getElementById('modal-description').textContent = item.dataset.description;
-          modal.classList.add('active');
-        });
-      });
+      const modal=document.getElementById('modal'), closeBtn=document.getElementById('modal-close');
+      document.querySelectorAll('.gallery-item').forEach(item => item.addEventListener('click', () => {
+        document.querySelector('.modal-img img').src = item.querySelector('img').src;
+        document.getElementById('modal-title').textContent = item.dataset.title;
+        document.getElementById('modal-description').textContent = item.dataset.description;
+        modal.classList.add('active');
+      }));
       closeBtn.addEventListener('click', () => modal.classList.remove('active'));
     });
   </script>
