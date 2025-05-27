@@ -27,13 +27,15 @@
     button:hover { background:rgba(0,0,0,0.05); }
 
     /* Bio Modal */
-    #bio-modal { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(0); width:90%; max-width:28rem; background:rgba(255,255,255,0.95); padding:1.5rem; border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,0.2); transition:transform 0.3s ease; z-index:300; }
+    #bio-modal { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(0); width:90%; max-width:28rem; background:rgba(255,255,255,0.95); padding:1.5rem; border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,0.2); transition:transform 0.3s ease; z-index:300; overflow:auto; }
     #bio-modal.active { transform:translate(-50%,-50%) scale(1); }
     #bio-close { position:absolute; top:0.75rem; right:1rem; font-size:1.5rem; cursor:pointer; }
+    #bio-modal h2 { text-indent:2em; margin-bottom:1rem; }
+    #bio-modal p { text-indent:2em; }
 
-    /* Gallery & Scrollbar */
-    .gallery-wrapper { position:absolute; top:80px; bottom:80px; left:0; right:0; overflow:hidden; }
-    #gallery-items { position:absolute; left:0; right:0; bottom:0; height:calc(100%); display:flex; align-items:center; overflow-x:auto; scroll-snap-type:x mandatory; padding:0 4rem; scroll-behavior:smooth; }
+    /* Gallery */
+    .gallery-wrapper { position:absolute; top:80px; bottom:80px; left:0; right:0; pointer-events:none; }
+    #gallery-items { position:absolute; top:0; bottom:0; left:0; right:0; display:flex; align-items:center; overflow-x:auto; scroll-snap-type:x mandatory; padding:0 4rem; scroll-behavior:smooth; pointer-events:auto; }
     #gallery-items::-webkit-scrollbar { height:14px; }
     #gallery-items::-webkit-scrollbar-track { background:rgba(255,255,255,0.4); }
     #gallery-items::-webkit-scrollbar-thumb { background:rgba(0,0,0,0.8); border-radius:7px; border:3px solid rgba(255,255,255,0.4); }
@@ -72,17 +74,14 @@
     </div>
   </header>
 
-  <!-- Bio Modal -->
   <div id="bio-modal">
     <span id="bio-close">&times;</span>
     <h2>關於作者</h2>
     <p>林煒哲。畢業於國立政治大學，從小生活於台灣台北，從小就喜歡有創意的事物。而後在長大的過程中，因看展而逐漸對繪畫這個創作方式產生興趣，便著手開始自行創作。</p>
   </div>
 
-  <!-- Gallery -->
   <section class="gallery-wrapper">
     <div id="gallery-items">
-      <!-- 11 件作品 -->
       <figure class="gallery-item" data-title="溫柔有時候像一種陷阱" data-description="以粉色為主的筆觸包覆螺旋狀的結構，象徵披上溫柔外衣的陷阱。">
         <img src="images/gentleness_is_sometimes_like_a_trap.jpg" alt="溫柔有時候像一種陷阱">
         <figcaption>溫柔有時候像一種陷阱</figcaption>
@@ -130,7 +129,6 @@
     </div>
   </section>
 
-  <!-- Lightbox Modal -->
   <div class="modal" id="modal">
     <div class="modal-close" id="modal-close">&times;</div>
     <div class="modal-content">
@@ -143,22 +141,21 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const bioBtn = document.getElementById('about-btn'), bioModal = document.getElementById('bio-modal'), bioClose = document.getElementById('bio-close');
-      bioBtn.addEventListener('click', () => bioModal.classList.toggle('active'));
-      bioClose.addEventListener('click', () => bioModal.classList.remove('active'));
+      document.getElementById('about-btn').addEventListener('click', () => document.getElementById('bio-modal').classList.toggle('active'));
+      document.getElementById('bio-close').addEventListener('click', () => document.getElementById('bio-modal').classList.remove('active'));
 
       const items = document.querySelectorAll('.gallery-item');
-      const observer = new IntersectionObserver(entries => entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('visible'); }), { threshold:0.3 });
-      items.forEach(item => observer.observe(item));
+      const observer = new IntersectionObserver(entries => entries.forEach(e => e.isIntersecting && e.target.classList.add('visible')), { threshold:0.3 });
+      items.forEach(i => observer.observe(i));
 
-      const modal = document.getElementById('modal'), closeBtn = document.getElementById('modal-close');
-      items.forEach(item => item.addEventListener('click', ()=>{
+      const modal = document.getElementById('modal');
+      items.forEach(item => item.addEventListener('click', () => {
         document.querySelector('.modal-img img').src = item.querySelector('img').src;
         document.getElementById('modal-title').textContent = item.dataset.title;
         document.getElementById('modal-description').textContent = item.dataset.description;
         modal.classList.add('active');
       }));
-      closeBtn.addEventListener('click', ()=> modal.classList.remove('active'));
+      document.getElementById('modal-close').addEventListener('click', () => modal.classList.remove('active'));
     });
   </script>
 </body>
